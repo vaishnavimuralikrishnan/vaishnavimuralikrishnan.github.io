@@ -103,17 +103,20 @@
   }
   .hero-links a:last-child{ border-right:none; }
 
-  .hero-photo{
-    width: 168px;
-    height: 168px;
-    border: 1px solid var(--line);
-    background: var(--paper-dim);
-    border-radius: 4px;
-    overflow: hidden;
-    display:flex; align-items:center; justify-content:center;
-    position: relative;
-  }
-  .hero-photo img{ width:100%; height:100%; object-fit: cover; display:block; }
+.hero-photo{
+    width:220px;
+    border:1px solid var(--line);
+    background:var(--paper-dim);
+    border-radius:4px;
+    overflow:hidden;
+}
+
+.hero-photo img{
+    width:100%;
+    height:auto;
+    display:block;
+    object-fit:contain;
+} }
   .hero-photo .ph-fallback{
     font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
     text-align:center; padding: 12px; line-height: 1.5;
