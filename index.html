@@ -1,441 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Vaishnavi Muralikrishnan</title>
-
-<meta name="description"
-content="Physics | Representation Learning | World Models | Symbolic AI">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Vaishnavi Muralikrishnan — physics, data engineering, and questions about how systems hold and change state.">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-
-font-family:Inter,sans-serif;
-background:#fafafa;
-color:#1f2937;
-line-height:1.8;
-
-}
-
-.container{
-
-max-width:960px;
-margin:auto;
-padding:70px 28px;
-
-}
-
-header{
-
-margin-bottom:90px;
-
-}
-
-h1{
-
-font-size:3rem;
-font-weight:700;
-margin-bottom:12px;
-
-}
-
-.subtitle{
-
-font-size:1.15rem;
-color:#4b5563;
-margin-bottom:28px;
-
-}
-
-nav a{
-
-margin-right:28px;
-text-decoration:none;
-color:#2563eb;
-font-weight:500;
-
-}
-
-nav a:hover{
-
-text-decoration:underline;
-
-}
-
-section{
-
-margin-bottom:90px;
-
-}
-
-h2{
-
-font-size:1.75rem;
-margin-bottom:25px;
-font-weight:600;
-
-}
-
-p{
-
-font-size:1.05rem;
-margin-bottom:18px;
-
-}
-
-.grid{
-
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:24px;
-
-}
-
-.card{
-
-background:white;
-padding:28px;
-border-radius:14px;
-border:1px solid #e5e7eb;
-
-transition:.2s;
-
-}
-
-.card:hover{
-
-transform:translateY(-3px);
-
-}
-
-.card h3{
-
-margin-bottom:12px;
-
-}
-
-ul{
-
-padding-left:20px;
-
-}
-
-li{
-
-margin-bottom:10px;
-
-}
-
-.timeline{
-
-border-left:2px solid #d1d5db;
-padding-left:25px;
-
-}
-
-.timeline div{
-
-margin-bottom:35px;
-
-}
-
-footer{
-
-padding-top:50px;
-border-top:1px solid #ddd;
-font-size:.95rem;
-color:#666;
-
-}
-
-.badge{
-
-display:inline-block;
-padding:6px 14px;
-border-radius:999px;
-background:#eef2ff;
-margin:4px;
-font-size:.9rem;
-
-}
-
-blockquote{
-
-padding:24px;
-background:#ffffff;
-border-left:5px solid #2563eb;
-margin-top:30px;
-font-style:italic;
-
-}
-
+  :root{
+    --paper: #f1efe6;
+    --paper-dim: #e8e4d6;
+    --ink: #1c2230;
+    --ink-soft: #4a5064;
+    --line: #c7c0ac;
+    --orbit: #b5551f;
+    --signal: #37607a;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Newsreader', 'Iowan Old Style', 'Georgia', serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--paper), var(--paper)),
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(28,34,48,0.035) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(28,34,48,0.035) 28px);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--signal); text-decoration-color: rgba(55,96,122,0.35); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--signal); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--orbit); outline-offset: 3px; }
+
+  .wrap{ max-width: 780px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    padding: 90px 0 60px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero .wrap{
+    display: grid;
+    grid-template-columns: 1fr 168px;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 640px){
+    .hero .wrap{ grid-template-columns: 1fr; }
+    .hero-photo{ order: -1; width: 108px; height: 108px; }
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 22px;
+  }
+  .eyebrow .dot{
+    width:6px; height:6px; border-radius:50%; background: var(--orbit);
+    box-shadow: 0 0 0 3px rgba(181,85,31,0.15);
+  }
+
+  h1{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(36px, 5.4vw, 52px);
+    line-height: 1.06;
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+  h1 em{ font-style: italic; color: var(--signal); }
+
+  .lede{
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 54ch;
+    margin: 0 0 26px;
+  }
+
+  .hero-links{
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+  }
+  .hero-links a{
+    padding: 6px 14px 6px 0;
+    margin-right: 14px;
+    border-right: 1px solid var(--line);
+  }
+  .hero-links a:last-child{ border-right:none; }
+
+  .hero-photo{
+    width: 168px;
+    height: 168px;
+    border: 1px solid var(--line);
+    background: var(--paper-dim);
+    border-radius: 4px;
+    overflow: hidden;
+    display:flex; align-items:center; justify-content:center;
+    position: relative;
+  }
+  .hero-photo img{ width:100%; height:100%; object-fit: cover; display:block; }
+  .hero-photo .ph-fallback{
+    font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
+    text-align:center; padding: 12px; line-height: 1.5;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding: 54px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+
+  .section-head{
+    display:flex; align-items:baseline; gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-num{ font-family: var(--mono); font-size: 12px; color: var(--orbit); }
+  h2{
+    font-family: var(--serif); font-weight: 500; font-size: 25px; margin: 0; letter-spacing: -0.005em;
+  }
+
+  .tags{ display:flex; flex-wrap:wrap; gap: 10px; }
+  .tag{
+    font-family: var(--mono); font-size: 12.5px; padding: 7px 12px;
+    border: 1px solid var(--line); border-radius: 3px; background: var(--paper-dim); color: var(--ink-soft);
+  }
+
+  .lead-para{ font-size: 16px; line-height: 1.75; color: var(--ink); max-width: 64ch; }
+  .lead-para + .lead-para{ margin-top: 14px; }
+
+  /* work entries */
+  .work{
+    border: 1px solid var(--line);
+    background: var(--paper-dim);
+    padding: 24px 24px 22px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .work-kicker{
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--orbit); margin-bottom: 8px;
+  }
+  .work h3{ font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0 0 10px; line-height: 1.3; }
+  .work p{ font-size: 15px; line-height: 1.68; color: var(--ink-soft); margin: 0 0 10px; }
+  .work p:last-of-type{ margin-bottom: 0; }
+  .work-media{
+    margin: 4px 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .work-media img{ width: 100%; display:block; }
+  .work-caption{
+    font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
+    padding: 8px 12px; border-top: 1px solid var(--line); background: var(--paper-dim);
+  }
+  .work-meta{
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+    margin-top: 12px; display:flex; gap: 16px; flex-wrap: wrap;
+  }
+
+  /* timeline / experience */
+  .tline{ list-style:none; margin:0; padding:0; }
+  .tline li{
+    display:grid; grid-template-columns: 130px 1fr; gap: 18px;
+    padding: 16px 0; border-top: 1px solid var(--line);
+  }
+  .tline li:first-child{ border-top:none; }
+  .tline time{ font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); padding-top:2px; }
+  .tline .role{ font-weight: 600; font-size: 15px; }
+  .tline .org{ color: var(--ink-soft); font-size: 14px; }
+  .tline .desc{ font-size: 14px; color: var(--ink-soft); line-height:1.6; margin-top: 4px; }
+  @media (max-width: 560px){ .tline li{ grid-template-columns: 1fr; gap: 4px; } }
+
+  footer{
+    padding: 44px 0 70px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    display:flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  footer a{ color: var(--ink-soft); }
 </style>
-
 </head>
-
 <body>
 
-<div class="container">
-
-<header>
-
-<h1>Vaishnavi Muralikrishnan</h1>
-
-<div class="subtitle">
-
-Physics • Representation Learning • World Models • Symbolic AI
-
-</div>
-
-<p>
-
-I am a Microsoft Fabric Data Engineer with a background in Physics and Data Science. My research interests lie at the intersection of representation learning, world models, physics-inspired machine learning, symbolic AI, and interpretable intelligent systems. I enjoy building independent experiments to understand how learned representations become useful for reasoning rather than prediction alone.
-
-</p>
-
-<nav>
-
-<a href="https://github.com/vaishnavimu">GitHub</a>
-
-<a href="#">LinkedIn</a>
-
-<a href="#">CV</a>
-
-<a href="mailto:your@email.com">Email</a>
-
-</nav>
-
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Chennai, India</div>
+      <h1>Vaishnavi<br>Muralikrishnan</h1>
+      <p class="lede">
+        I'm interested in how systems — physical or learned — hold a state, and what happens
+        when you perturb it. My path runs from physics through astronomy and knowledge graphs
+        to world models, and I write some of it down here.
+      </p>
+      <nav class="hero-links">
+        <a href="https://www.linkedin.com/in/vaishnavimu">linkedin</a>
+        <a href="https://github.com/">github</a>
+      </nav>
+    </div>
+    <div class="hero-photo">
+      <!-- Replace this src with your own photo, e.g. assets/photo.jpg -->
+      <img src="profile-picture.png" alt="Vaishnavi Muralikrishnan"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="ph-fallback" style="display:none;">add<br>profile-picture.png</div>
+    </div>
+  </div>
 </header>
 
-<section>
-
-<h2>Research Interests</h2>
-
-<div>
-
-<span class="badge">Representation Learning</span>
-
-<span class="badge">World Models</span>
-
-<span class="badge">JEPA</span>
-
-<span class="badge">Physics-Inspired Machine Learning</span>
-
-<span class="badge">Symbolic AI</span>
-
-<span class="badge">Knowledge Graphs</span>
-
-<span class="badge">Reasoning</span>
-
-<span class="badge">Interpretability</span>
-
-</div>
-
-</section>
-
-<section>
-
-<h2>About</h2>
-
-<p>
-
-My academic background began in Physics before transitioning into Data Science and enterprise AI engineering. Working with ontology-driven systems, semantic reasoning, and knowledge graphs led me toward a broader question: how do neural systems develop internal representations capable of supporting reasoning without explicitly encoded structure?
-
-</p>
-
-<p>
-
-My current work explores representation learning through independent experiments involving Joint Embedding Predictive Architectures (JEPA), latent world models, and physics-inspired environments. Rather than treating predictive performance as the primary objective, I am interested in understanding when learned representations become editable, reusable, and capable of supporting abstraction.
-
-</p>
-
-</section>
-
-<section>
-
-<h2>Current Position</h2>
-
-<div class="card">
-
-<h3>Microsoft Fabric Data Engineer</h3>
-
-<p>
-
-Building enterprise semantic AI systems, ontology-driven knowledge graphs, data engineering pipelines, and AI governance solutions using Microsoft Fabric, RDF, OWL, SPARQL and Apache Jena Fuseki.
-
-</p>
-
-</div>
-
-</section>
-
-<section>
-
-<h2>Independent Research</h2>
-
-<div class="grid">
-
-<div class="card">
-
-<h3>Intervening on Latent Representations in JEPA World Models</h3>
-
-<p>
-
-A comparative study between autoregressive Transformers and JEPA-style latent predictors using a controlled physics simulation of elastic collisions.
-
-</p>
-
-<p>
-
-The project investigates whether intervention on learned latent representations provides evidence of abstraction beyond predictive accuracy.
-
-</p>
-
-<p>
-
-<strong>Status:</strong> Ongoing
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<section>
-
-<h2>Research Notes</h2>
-
-<div class="grid">
-
-<div class="card">
-
-<h3>Coming Soon</h3>
-
-<p>
-
-• Why Prediction Is Not Understanding
-
-</p>
-
-<p>
-
-• What Latent Spaces Actually Represent
-
-</p>
-
-<p>
-
-• World Models and Physical Systems
-
-</p>
-
-<p>
-
-• Symbolic AI vs Learned Representations
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<section>
-
-<h2>Academic Journey</h2>
-
-<div class="timeline">
-
-<div>
-
-<h3>B.Sc. Physics</h3>
-
-<p>
-
-Understanding physical systems through mathematics and first principles.
-
-</p>
-
-</div>
-
-<div>
-
-<h3>M.Sc. Data Science</h3>
-
-<p>
-
-Machine learning, statistical modelling and computational methods.
-
-</p>
-
-</div>
-
-<div>
-
-<h3>Industry</h3>
-
-<p>
-
-Enterprise AI, semantic technologies, ontology engineering, and Microsoft Fabric.
-
-</p>
-
-</div>
-
-<div>
-
-<h3>Current Focus</h3>
-
-<p>
-
-Representation learning, world models and physics-inspired machine learning.
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-<section>
-
-<h2>Research Philosophy</h2>
-
-<blockquote>
-
-I am interested in understanding when a learned representation becomes something that can be reasoned about and intervened on, rather than something that merely predicts well. My goal is not simply to build better predictive systems, but to understand how intelligent systems acquire representations that support abstraction and reasoning.
-
-</blockquote>
-
-</section>
-
-<footer>
-
-© 2026 Vaishnavi Muralikrishnan
-
+<main class="wrap">
+
+  <section id="about">
+    <div class="section-head"><span class="section-num">01</span><h2>About</h2></div>
+    <p class="lead-para">
+      I trained as a physicist, then moved through data science and into industry work on
+      ontology-driven knowledge graphs — RDF, OWL, SPARQL, the machinery of representing what
+      a system knows explicitly. Alongside that I've kept doing observational astronomy for the
+      sheer pleasure of measuring something real and being unsure what it means, and more recently
+      I've been building small world models to poke at how learned systems represent the things
+      they predict.
+    </p>
+    <p class="lead-para">
+      None of it feels like a detour to me — physics gave me a way of asking what a "state" is
+      and how it evolves; knowledge engineering gave me a feel for the difference between a
+      representation that's structured on purpose and one that just happens to work. I like being
+      wrong about something in a way that teaches me why, more than being routinely right.
+    </p>
+  </section>
+
+  <section id="interests">
+    <div class="section-head"><span class="section-num">02</span><h2>Things I think about</h2></div>
+    <div class="tags">
+      <span class="tag">world models</span>
+      <span class="tag">JEPA / self-supervised prediction</span>
+      <span class="tag">latent representation dynamics</span>
+      <span class="tag">dynamical systems</span>
+      <span class="tag">knowledge graphs &amp; ontologies</span>
+      <span class="tag">observational astronomy</span>
+      <span class="tag">anomaly detection</span>
+      <span class="tag">data-driven modelling</span>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-head"><span class="section-num">03</span><h2>Selected work</h2></div>
+
+    <div class="work">
+      <div class="work-kicker">Independent project · 2025</div>
+      <h3>World models and causal structure in latent space</h3>
+      <div class="work-media">
+        <img src="assets/jepa-schematic.svg" alt="Schematic comparing a latent-space model and a pixel-space model under mid-rollout intervention">
+        <div class="work-caption">schematic: intervening on the latent state vs. the pixel state mid-rollout</div>
+      </div>
+      <p>
+        A comparison of a Joint-Embedding Predictive Architecture (64-dim latent space) against
+        a GPT-style autoregressive pixel Transformer, both trained on a two-body elastic-collision
+        simulation. The Transformer's near-perfect one-step loss turned out to be memorization of a
+        deterministic trajectory, not learned dynamics — the JEPA's higher loss was a real information
+        bottleneck, not a weaker model.
+      </p>
+      <p>
+        Manually perturbing the JEPA's latent vector mid-rollout produced dynamics that continued
+        coherently from the new state — a manipulable belief state, which I'm careful to describe as
+        a controlled observation, not a claim of general causal reasoning.
+      </p>
+      <div class="work-meta"><span>pymunk · PyTorch · latent intervention</span></div>
+    </div>
+
+    <div class="work">
+      <div class="work-kicker">Observational paper · 2025</div>
+      <h3>Astrometric observations of WDS 18380+4151</h3>
+      <div class="work-media">
+        <img src="binary-star-plot.png" alt="Plot of historical and 2025 separation measurements for WDS 18380+4151">
+        <div class="work-caption">separation measurements, 1999–2025 — historical data in green, our 2025 point in red</div>
+      </div>
+      <p>
+        Ten CCD observations of a double-star system with the Great Basin Observatory, combined with
+        nine historical measurements and Gaia DR3 parallax and proper-motion data, to weigh the evidence
+        for a physical versus optical binary. The honest answer is: still inconclusive — which is itself
+        the point of doing astrometry carefully.
+      </p>
+      <div class="work-meta"><span>AstroImageJ · ASTAP · Gaia DR3</span></div>
+    </div>
+
+    <div class="work">
+      <div class="work-kicker">Undergraduate research</div>
+      <h3>CMEs and solar energetic particles, cycles 23 &amp; 24</h3>
+      <p>
+        Analyzed 152 SEP events from SOHO/LASCO data, finding a 22% drop in mean CME speed between
+        solar cycles, and used Type II radio burst band-splitting to estimate coronal Alfvén speed.
+      </p>
+    </div>
+
+    <div class="work">
+      <div class="work-kicker">Undergraduate research</div>
+      <h3>Time-series photometry of a variable star</h3>
+      <p>
+        Multi-band (B, V, I) light curves and phase-colored color-magnitude diagrams tracking a pulsating
+        star's evolution across pulsation phase.
+      </p>
+    </div>
+  </section>
+
+  <section id="path">
+    <div class="section-head"><span class="section-num">04</span><h2>Path so far</h2></div>
+    <ul class="tline">
+      <li>
+        <time>2026 — present</time>
+        <div>
+          <div class="role">Data Engineer, Knowledge Fabric &amp; Agentic AI</div>
+          <div class="org">Mastech Digital, Chennai</div>
+          <div class="desc">Ontology-driven knowledge graphs (RDF/OWL/SPARQL, Apache Jena Fuseki) unifying healthcare claims and diagnosis data; agentic pipelines for ontology mapping.</div>
+        </div>
+      </li>
+      <li>
+        <time>2024 — 2026</time>
+        <div>
+          <div class="role">Engineer, Data Platforms</div>
+          <div class="org">Tata Communications, Chennai</div>
+          <div class="desc">Microsoft Fabric Lakehouse architecture; reliability engineering across 300+ database instances.</div>
+        </div>
+      </li>
+      <li>
+        <time>2022 — 2024</time>
+        <div>
+          <div class="role">M.Sc. Applied Data Science</div>
+          <div class="org">SRM University · CGPA 9.05/10</div>
+          <div class="desc">Thesis on loan-performance prediction: feature selection, class-imbalance handling, SHAP/LIME explainability.</div>
+        </div>
+      </li>
+      <li>
+        <time>2019 — 2022</time>
+        <div>
+          <div class="role">B.Sc. Physics</div>
+          <div class="org">The American College, Madurai · CGPA 8.15/10</div>
+          <div class="desc">Classical and quantum mechanics, statistical mechanics — where the questions I still ask started.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>Vaishnavi Muralikrishnan — Chennai, India</span>
+  <span>
+    <a href="https://www.linkedin.com/in/vaishnavimu">linkedin</a> ·
+    <a href="https://github.com/">github</a>
+  </span>
 </footer>
 
-</div>
-
 </body>
-
 </html>
