@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaishnavi Muralikrishnan</title>
+<meta name="description" content="Vaishnavi Muralikrishnan — physics, machine learning, and world models.">
+
+<style>
+  :root{
+    --paper: #f2f1ec;
+    --paper-dim: #e7e6de;
+    --ink: #1b2422;
+    --ink-soft: #4d5a58;
+    --line: #c7cdc4;
+    --teal: #1f6f6b;
+    --green: #3a7d5c;
+    --blue: #2b5c7a;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Newsreader', 'Iowan Old Style', 'Georgia', serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--paper), var(--paper)),
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(27,36,34,0.035) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(27,36,34,0.035) 28px);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--blue); text-decoration-color: rgba(43,92,122,0.35); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--blue); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+  .wrap{ max-width: 780px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    padding: 90px 0 60px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero .wrap{
+    display: grid;
+    grid-template-columns: 1fr 168px;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 640px){
+    .hero .wrap{ grid-template-columns: 1fr; }
+    .hero-photo{ order: -1; width: 108px; height: 108px; }
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 22px;
+  }
+  .eyebrow .dot{
+    width:6px; height:6px; border-radius:50%; background: var(--teal);
+    box-shadow: 0 0 0 3px rgba(31,111,107,0.15);
+  }
+
+  h1{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(36px, 5.4vw, 52px);
+    line-height: 1.06;
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+  h1 em{ font-style: italic; color: var(--blue); }
+
+  .lede{
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 54ch;
+    margin: 0 0 26px;
+  }
+
+  .hero-links{
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+  }
+  .hero-links a{
+    padding: 6px 14px 6px 0;
+    margin-right: 14px;
+    border-right: 1px solid var(--line);
+  }
+  .hero-links a:last-child{ border-right:none; }
+
+.hero-photo{
+    width:220px;
+    border:1px solid var(--line);
+    background:var(--paper-dim);
+    border-radius:4px;
+    overflow:hidden;
+}
+
+.hero-photo img{
+    width:100%;
+    height:auto;
+    display:block;
+    object-fit:contain;
+}
+  .hero-photo .ph-fallback{
+    font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
+    text-align:center; padding: 12px; line-height: 1.5;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding: 54px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+
+  .section-head{
+    display:flex; align-items:baseline; gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-num{ font-family: var(--mono); font-size: 12px; color: var(--teal); }
+  h2{
+    font-family: var(--serif); font-weight: 500; font-size: 25px; margin: 0; letter-spacing: -0.005em;
+  }
+
+  .tags{ display:flex; flex-wrap:wrap; gap: 10px; }
+  .tag{
+    font-family: var(--mono); font-size: 12.5px; padding: 7px 12px;
+    border: 1px solid var(--line); border-radius: 3px; background: var(--paper-dim); color: var(--ink-soft);
+  }
+  .tag:nth-child(3n+1){ border-left: 2px solid var(--teal); }
+  .tag:nth-child(3n+2){ border-left: 2px solid var(--green); }
+  .tag:nth-child(3n+3){ border-left: 2px solid var(--blue); }
+
+  .lead-para{ font-size: 16px; line-height: 1.75; color: var(--ink); max-width: 64ch; }
+  .lead-para + .lead-para{ margin-top: 14px; }
+
+  /* work entries */
+  .work{
+    border: 1px solid var(--line);
+    background: var(--paper-dim);
+    padding: 24px 24px 22px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .work-kicker{
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 8px;
+  }
+  .work h3{ font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0 0 10px; line-height: 1.3; }
+  .work p{ font-size: 15px; line-height: 1.68; color: var(--ink-soft); margin: 0 0 10px; }
+  .work p:last-of-type{ margin-bottom: 0; }
+  .work-media{
+    margin: 4px 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .work-media img{ width: 100%; display:block; }
+  .work-caption{
+    font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
+    padding: 8px 12px; border-top: 1px solid var(--line); background: var(--paper-dim);
+  }
+  .work-meta{
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+    margin-top: 12px; display:flex; gap: 16px; flex-wrap: wrap;
+  }
+  .work-link{
+    display:inline-block;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    margin-top: 14px;
+    padding: 8px 14px;
+    border: 1px solid var(--teal);
+    border-radius: 3px;
+    color: var(--teal);
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .work-link:hover{ background: var(--teal); color: var(--paper); text-decoration: none; }
+  .work-link.alt{ border-color: var(--blue); color: var(--blue); }
+  .work-link.alt:hover{ background: var(--blue); color: var(--paper); }
+
+  /* timeline / experience */
+  .tline{ list-style:none; margin:0; padding:0; }
+  .tline li{
+    display:grid; grid-template-columns: 130px 1fr; gap: 18px;
+    padding: 16px 0; border-top: 1px solid var(--line);
+  }
+  .tline li:first-child{ border-top:none; }
+  .tline time{ font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); padding-top:2px; }
+  .tline .role{ font-weight: 600; font-size: 15px; }
+  .tline .org{ color: var(--ink-soft); font-size: 14px; }
+  .tline .desc{ font-size: 14px; color: var(--ink-soft); line-height:1.6; margin-top: 4px; }
+  @media (max-width: 560px){ .tline li{ grid-template-columns: 1fr; gap: 4px; } }
+
+  footer{
+    padding: 44px 0 70px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    display:flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  footer a{ color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Chennai, India</div>
+      <h1>Vaishnavi<br>Muralikrishnan</h1>
+      <p class="lede">
+        I study how physical and learned systems represent state, evolve through dynamics, and respond
+        to intervention. My work brings together physics, machine learning, and scientific modelling,
+        with a focus on world models and learned representations.
+      </p>
+      <nav class="hero-links">
+        <a href="https://www.linkedin.com/in/vaishnavimu">linkedin</a>
+        <a href="https://github.com/">github</a>
+      </nav>
+    </div>
+    <div class="hero-photo">
+      <!-- Replace this src with your own photo, e.g. assets/photo.jpg -->
+      <img src="profile-picture.png" alt="Vaishnavi Muralikrishnan"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="ph-fallback" style="display:none;">add<br>profile-picture.png</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="about">
+    <div class="section-head"><span class="section-num">01</span><h2>About</h2></div>
+    <p class="lead-para">
+      I trained as a physicist and moved into data science and engineering, but the underlying
+      question remained the same: how does a system represent the structure of the world it observes?
+    </p>
+    <p class="lead-para">
+      Physics gave me a way to think about state, dynamics, governing variables, and models of
+      physical behaviour. Engineering taught me to build computational systems, test assumptions,
+      and care about what happens when a system encounters conditions outside those it was designed for.
+    </p>
+    <p class="lead-para">
+      My current research work brings these perspectives together through world models,
+      representation learning, and physics-informed machine learning. I build controlled experiments
+      to examine how learned representations capture dynamics and what those representations allow
+      a model to do beyond prediction.
+    </p>
+    <p class="lead-para">
+      My work is driven by a simple approach: formulate a precise question, build the smallest
+      system that can test it, and investigate where the model succeeds, fails, or behaves unexpectedly.
+    </p>
+  </section>
+
+  <section id="interests">
+    <div class="section-head"><span class="section-num">02</span><h2>Research</h2></div>
+    <div class="tags">
+      <span class="tag">World Models</span>
+      <span class="tag">Physics-Informed Machine Learning</span>
+      <span class="tag">Representation Learning</span>
+      <span class="tag">Latent Dynamics</span>
+      <span class="tag">Machine Reasoning</span>
+      <span class="tag">Dynamical Systems</span>
+      <span class="tag">Scientific Machine Learning</span>
+      <span class="tag">Intervention and Generalization</span>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-head"><span class="section-num">03</span><h2>Selected Work</h2></div>
+
+    <div class="work">
+      <div class="work-kicker">Independent Research · 2026</div>
+      <h3>World Models and Intervention in Latent Space</h3>
+      <div class="work-media">
+        <img src="jepa-schematic.svg" alt="Schematic comparing a latent-space model and a pixel-space model under mid-rollout intervention">
+        <div class="work-caption">comparing pixel-space prediction with latent-space dynamics under intervention</div>
+      </div>
+      <p>
+        A controlled study of learned representations using a two-body elastic collision environment.
+        I compare an autoregressive Transformer operating on image sequences with a JEPA-style model
+        that predicts in a 64-dimensional latent space.
+      </p>
+      <p>
+        The experiment examines a question that predictive error alone cannot answer: what does a
+        model's internal representation allow us to do? I test this by intervening directly on the
+        latent state during rollout and examining whether the resulting dynamics remain coherent.
+      </p>
+      <p>
+        The project is an ongoing investigation into representation, latent dynamics, intervention,
+        and the relationship between prediction and reasoning.
+      </p>
+      <div class="work-meta"><span>PyTorch · PyMunk · JEPA · latent intervention</span></div>
+      <a class="work-link" href="jepa-world-models.html">Read the full write-up &rarr;</a>
+    </div>
+
+    <div class="work">
+      <div class="work-kicker">Observational Astronomy · 2025</div>
+      <h3>Astrometric Study of WDS 18380+4151</h3>
+      <div class="work-media">
+        <img src="binary-star-plot.png" alt="Plot of historical and 2025 separation measurements for WDS 18380+4151">
+        <div class="work-caption">astrometric measurements and orbital context for a visual binary system</div>
+      </div>
+      <p>
+        Ten CCD observations of a double-star system with the Great Basin Observatory, combined with
+        historical measurements and Gaia DR3 astrometric data.
+      </p>
+      <p>
+        The analysis examines the evidence for the system being physically associated rather than an
+        optical alignment. The available observations remain insufficient for a definitive conclusion,
+        illustrating the role of continued measurement in resolving astronomical systems.
+      </p>
+      <div class="work-meta"><span>AstroImageJ · ASTAP · Gaia DR3 · observational astronomy</span></div>
+      <a class="work-link alt" href="https://science.greatbasinobservatory.org/wp-content/uploads/2026/01/Vaish_BinaryStar_Paper.pdf" target="_blank" rel="noopener">Read the paper (PDF) &rarr;</a>
+    </div>
+
+    <div class="work">
+      <div class="work-kicker">Undergraduate Research</div>
+      <h3>Coronal Mass Ejections and Solar Energetic Particles</h3>
+      <p>
+        Analysis of 152 solar energetic particle events using SOHO/LASCO observations across solar
+        cycles 23 and 24. The study examined changes in CME properties across cycles and used Type II
+        radio burst band-splitting to estimate coronal Alfven speeds.
+      </p>
+      <div class="work-meta"><span>SOHO · LASCO · solar physics · particle events</span></div>
+    </div>
+
+    <div class="work">
+      <div class="work-kicker">Undergraduate Research</div>
+      <h3>Time-Series Photometry of a Variable Star</h3>
+      <p>
+        Multi-band B, V, and I photometry used to construct light curves and phase-resolved
+        colour-magnitude diagrams, examining the behaviour of a pulsating star across its
+        variability cycle.
+      </p>
+      <div class="work-meta"><span>Photometry · Time-series analysis · Stellar variability</span></div>
+    </div>
+  </section>
+
+  <section id="path">
+    <div class="section-head"><span class="section-num">04</span><h2>Background</h2></div>
+    <ul class="tline">
+      <li>
+        <time>2026, Present</time>
+        <div>
+          <div class="role">Data Engineer</div>
+          <div class="org">Mastech Digital, Chennai</div>
+          <div class="desc">Building production data and AI systems, with current work spanning machine learning systems, data infrastructure, and computational workflows.</div>
+        </div>
+      </li>
+      <li>
+        <time>2024, 2026</time>
+        <div>
+          <div class="role">Engineer, Data Platforms</div>
+          <div class="org">Tata Communications, Chennai</div>
+          <div class="desc">Worked on large-scale data platforms and production data systems, developing experience in distributed processing, reliability, and data infrastructure.</div>
+        </div>
+      </li>
+      <li>
+        <time>2022, 2024</time>
+        <div>
+          <div class="role">M.Sc. Data Science</div>
+          <div class="org">SRM University · CGPA 9.05/10</div>
+          <div class="desc">Advanced training in machine learning, statistical modelling, data analysis, and computational methods.</div>
+        </div>
+      </li>
+      <li>
+        <time>2019, 2022</time>
+        <div>
+          <div class="role">B.Sc. Physics</div>
+          <div class="org">The American College, Madurai · CGPA 8.15/10</div>
+          <div class="desc">Training in classical mechanics, quantum mechanics, statistical mechanics, and mathematical methods, providing the foundation for my current work in scientific machine learning.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>Vaishnavi Muralikrishnan · Physics · Machine Learning · World Models</span>
+  <span>
+    <a href="https://www.linkedin.com/in/vaishnavimu">linkedin</a> ·
+    <a href="https://github.com/">github</a>
+  </span>
+</footer>
+
+</body>
+</html>
