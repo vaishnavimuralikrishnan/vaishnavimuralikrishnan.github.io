@@ -224,23 +224,15 @@
 <header class="hero">
   <div class="wrap">
     <div>
-      <div class="eyebrow"><span class="dot"></span>Chennai, India</div>
+      <div class="eyebrow"><span class="dot"></span>Bengaluru, India</div>
       <h1>Vaishnavi<br>Muralikrishnan</h1>
       <p class="lede">
-        I study how physical and learned systems represent state, evolve through dynamics, and respond
-        to intervention. My work brings together physics, machine learning, and scientific modelling,
-        with a focus on world models and learned representations.
+        I study how learned systems represent dynamics and respond to intervention. My work brings together physics, machine learning, and scientific thinking, with focus on world models, representation learning, and the question of what a model must discard to learn structure.
       </p>
       <nav class="hero-links">
-        <a href="https://www.linkedin.com/in/vaishnavimu">linkedin</a>
-        <a href="https://github.com/">github</a>
+        <a href="https://www.linkedin.com/in/vaishnavimu" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://github.com/vaishnavi-muralikrish" target="_blank" rel="noopener">github</a>
       </nav>
-    </div>
-    <div class="hero-photo">
-      <!-- Replace this src with your own photo, e.g. assets/photo.jpg -->
-      <img src="profile-picture.png" alt="Vaishnavi Muralikrishnan"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="ph-fallback" style="display:none;">add<br>profile-picture.png</div>
     </div>
   </div>
 </header>
@@ -250,37 +242,27 @@
   <section id="about">
     <div class="section-head"><span class="section-num">01</span><h2>About</h2></div>
     <p class="lead-para">
-      I trained as a physicist and moved into data science and engineering, but the underlying
-      question remained the same: how does a system represent the structure of the world it observes?
+      I studied physics as an undergraduate, moved into data science, and now work at the intersection of both. The underlying question has remained constant: how do systems—physical or learned—represent state, evolve through dynamics, and respond when we perturb them?
     </p>
     <p class="lead-para">
-      Physics gave me a way to think about state, dynamics, governing variables, and models of
-      physical behaviour. Engineering taught me to build computational systems, test assumptions,
-      and care about what happens when a system encounters conditions outside those it was designed for.
+      Physics gave me a language for talking about state variables, governing equations, and the role of modeling assumptions. Engineering taught me to build systems that work at scale and test what breaks. My current research combines these perspectives through the lens of world models and machine learning.
     </p>
     <p class="lead-para">
-      My current research work brings these perspectives together through world models,
-      representation learning, and physics-informed machine learning. I build controlled experiments
-      to examine how learned representations capture dynamics and what those representations allow
-      a model to do beyond prediction.
-    </p>
-    <p class="lead-para">
-      My work is driven by a simple approach: formulate a precise question, build the smallest
-      system that can test it, and investigate where the model succeeds, fails, or behaves unexpectedly.
+      I believe in small, controlled experiments. Formulate a precise question. Build the simplest system that tests it. Observe where it succeeds and where it fails. That approach has guided my work in latent dynamics, intervention, and the challenge of learning coherent representations from high-dimensional data.
     </p>
   </section>
 
   <section id="interests">
-    <div class="section-head"><span class="section-num">02</span><h2>Research</h2></div>
+    <div class="section-head"><span class="section-num">02</span><h2>Research Interests</h2></div>
     <div class="tags">
       <span class="tag">World Models</span>
-      <span class="tag">Physics-Informed Machine Learning</span>
-      <span class="tag">Representation Learning</span>
       <span class="tag">Latent Dynamics</span>
+      <span class="tag">Representation Learning</span>
+      <span class="tag">Self-Supervised Prediction</span>
+      <span class="tag">Intervention & Causality</span>
       <span class="tag">Machine Reasoning</span>
-      <span class="tag">Dynamical Systems</span>
-      <span class="tag">Scientific Machine Learning</span>
-      <span class="tag">Intervention and Generalization</span>
+      <span class="tag">Physics-Informed Learning</span>
+      <span class="tag">Generalization in Dynamics</span>
     </div>
   </section>
 
@@ -288,68 +270,39 @@
     <div class="section-head"><span class="section-num">03</span><h2>Selected Work</h2></div>
 
     <div class="work">
-      <div class="work-kicker">Independent Research · 2026</div>
-      <h3>World Models and Intervention in Latent Space</h3>
-      <div class="work-media">
-        <img src="jepa-schematic.svg" alt="Schematic comparing a latent-space model and a pixel-space model under mid-rollout intervention">
-        <div class="work-caption">comparing pixel-space prediction with latent-space dynamics under intervention</div>
-      </div>
+      <div class="work-kicker">Research Project · 2026</div>
+      <h3>What a Model Must Discard to Learn Physics</h3>
       <p>
-        A controlled study of learned representations using a two-body elastic collision environment.
-        I compare an autoregressive Transformer operating on image sequences with a JEPA-style model
-        that predicts in a 64-dimensional latent space.
+        A comparison of two approaches to predicting the next frame of a bouncing-ball collision: a pixel-space Transformer that predicts with no bottleneck, and a JEPA-style model that compresses into a 64-dimensional latent state before predicting.
       </p>
       <p>
-        The experiment examines a question that predictive error alone cannot answer: what does a
-        model's internal representation allow us to do? I test this by intervening directly on the
-        latent state during rollout and examining whether the resulting dynamics remain coherent.
+        The pixel model achieved a loss three orders of magnitude lower on one-step prediction, yet it had learned almost nothing about the dynamics. The latent model's higher loss came from a bottleneck that forced it to compress all information through a narrow channel, leaving only what mattered for predicting the next state.
       </p>
       <p>
-        The project is an ongoing investigation into representation, latent dynamics, intervention,
-        and the relationship between prediction and reasoning.
+        The experiment investigates interpretation through intervention: by directly editing the latent state mid-rollout and observing whether the model continues coherently from the new position. This provides evidence that the model has built a manipulable representation of state, not merely memorized a trajectory.
       </p>
       <div class="work-meta"><span>PyTorch · PyMunk · JEPA · latent intervention</span></div>
-      <a class="work-link" href="jepa-world-models.html">Read the full write-up &rarr;</a>
+      <a class="work-link" href="jepa-bouncing-balls.html">Read the full write-up &rarr;</a>
     </div>
 
     <div class="work">
       <div class="work-kicker">Observational Astronomy · 2025</div>
       <h3>Astrometric Study of WDS 18380+4151</h3>
-      <div class="work-media">
-        <img src="binary-star-plot.png" alt="Plot of historical and 2025 separation measurements for WDS 18380+4151">
-        <div class="work-caption">astrometric measurements and orbital context for a visual binary system</div>
-      </div>
       <p>
-        Ten CCD observations of a double-star system with the Great Basin Observatory, combined with
-        historical measurements and Gaia DR3 astrometric data.
+        Ten CCD observations of a visual binary system using the Great Basin Observatory, combined with historical measurements and Gaia DR3 astrometry. The analysis examines whether the system is physically associated or an optical alignment.
       </p>
       <p>
-        The analysis examines the evidence for the system being physically associated rather than an
-        optical alignment. The available observations remain insufficient for a definitive conclusion,
-        illustrating the role of continued measurement in resolving astronomical systems.
+        The available observations remain insufficient for a definitive conclusion, illustrating the role of continued measurement in resolving astronomical systems and the practice of scientific uncertainty.
       </p>
-      <div class="work-meta"><span>AstroImageJ · ASTAP · Gaia DR3 · observational astronomy</span></div>
+      <div class="work-meta"><span>AstroImageJ · ASTAP · Gaia DR3</span></div>
       <a class="work-link alt" href="https://science.greatbasinobservatory.org/wp-content/uploads/2026/01/Vaish_BinaryStar_Paper.pdf" target="_blank" rel="noopener">Read the paper (PDF) &rarr;</a>
-    </div>
-
-    <div class="work">
-      <div class="work-kicker">Undergraduate Research</div>
-      <h3>Coronal Mass Ejections and Solar Energetic Particles</h3>
-      <p>
-        Analysis of 152 solar energetic particle events using SOHO/LASCO observations across solar
-        cycles 23 and 24. The study examined changes in CME properties across cycles and used Type II
-        radio burst band-splitting to estimate coronal Alfven speeds.
-      </p>
-      <div class="work-meta"><span>SOHO · LASCO · solar physics · particle events</span></div>
     </div>
 
     <div class="work">
       <div class="work-kicker">Undergraduate Research</div>
       <h3>Time-Series Photometry of a Variable Star</h3>
       <p>
-        Multi-band B, V, and I photometry used to construct light curves and phase-resolved
-        colour-magnitude diagrams, examining the behaviour of a pulsating star across its
-        variability cycle.
+        Multi-band B, V, and I photometry used to construct light curves and phase-resolved colour-magnitude diagrams, examining the behaviour of a pulsating star across its variability cycle.
       </p>
       <div class="work-meta"><span>Photometry · Time-series analysis · Stellar variability</span></div>
     </div>
@@ -361,33 +314,33 @@
       <li>
         <time>2026, Present</time>
         <div>
-          <div class="role">Data Engineer</div>
-          <div class="org">Mastech Digital, Chennai</div>
-          <div class="desc">Building production data and AI systems, with current work spanning machine learning systems, data infrastructure, and computational workflows.</div>
+          <div class="role">Fabric Data Engineer</div>
+          <div class="org">Mastech Digital, Bengaluru</div>
+          <div class="desc">Building production data and analytics systems using Microsoft Fabric. Work spans data engineering, pipeline automation, and modern cloud data architecture.</div>
         </div>
       </li>
       <li>
-        <time>2024, 2026</time>
+        <time>2024–2026</time>
         <div>
-          <div class="role">Engineer, Data Platforms</div>
+          <div class="role">Data Engineer</div>
           <div class="org">Tata Communications, Chennai</div>
-          <div class="desc">Worked on large-scale data platforms and production data systems, developing experience in distributed processing, reliability, and data infrastructure.</div>
+          <div class="desc">Built and maintained data platforms and ML systems in production. Worked with large-scale data infrastructure, model deployment, and analytics pipelines.</div>
         </div>
       </li>
       <li>
-        <time>2022, 2024</time>
+        <time>2022–2024</time>
         <div>
           <div class="role">M.Sc. Data Science</div>
           <div class="org">SRM University · CGPA 9.05/10</div>
-          <div class="desc">Advanced training in machine learning, statistical modelling, data analysis, and computational methods.</div>
+          <div class="desc">Advanced training in machine learning, statistical modeling, data analysis, and computational methods. Thesis on applied machine learning systems.</div>
         </div>
       </li>
       <li>
-        <time>2019, 2022</time>
+        <time>2019–2022</time>
         <div>
           <div class="role">B.Sc. Physics</div>
           <div class="org">The American College, Madurai · CGPA 8.15/10</div>
-          <div class="desc">Training in classical mechanics, quantum mechanics, statistical mechanics, and mathematical methods, providing the foundation for my current work in scientific machine learning.</div>
+          <div class="desc">Classical mechanics, quantum mechanics, statistical mechanics, electromagnetism, and mathematical methods. Foundation for later work in scientific machine learning.</div>
         </div>
       </li>
     </ul>
@@ -398,8 +351,8 @@
 <footer class="wrap">
   <span>Vaishnavi Muralikrishnan · Physics · Machine Learning · World Models</span>
   <span>
-    <a href="https://www.linkedin.com/in/vaishnavimu">linkedin</a> ·
-    <a href="https://github.com/">github</a>
+    <a href="https://www.linkedin.com/in/vaishnavimu" target="_blank" rel="noopener">linkedin</a> ·
+    <a href="https://github.com/vaishnavi-muralikrish" target="_blank" rel="noopener">github</a>
   </span>
 </footer>
 
