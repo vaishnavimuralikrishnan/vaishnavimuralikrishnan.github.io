@@ -1,0 +1,13 @@
+model,metric,mean,std,final_step
+JEPA,pos_err_mean,nan,nan,nan
+JEPA,pixel_mse,0.0155,0.0000,0.0155
+JEPA,foreground_mse,0.0552,0.0263,0.0259
+JEPA,ssim,0.9541,0.0032,0.9514
+Pixel Transformer,pos_err_mean,16.4888,6.9508,26.7808
+Pixel Transformer,pixel_mse,0.0189,0.0049,0.0232
+Pixel Transformer,foreground_mse,0.0545,0.0209,0.0301
+Pixel Transformer,ssim,0.7354,0.0386,0.7504
+Velocity Baseline,pos_err_mean,0.8348,0.1232,0.8540
+Velocity Baseline,pixel_mse,0.0000,0.0000,0.0000
+Velocity Baseline,foreground_mse,0.0000,0.0000,0.0000
+Velocity Baseline,ssim,1.0000,0.0000,1.0000
