@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Reranking Costs and What It Buys | Vaishnavi Muralikrishnan</title>
+<meta name="description" content="A reproducible benchmark of BM25, semantic ranking and selective cross-encoder reranking on Amazon ESCI, measuring ranking quality against inference cost with paired bootstrap uncertainty.">
+
+<style>
+  :root{
+    --bg: #f2f1ec;
+    --bg-dim: #e7e6de;
+    --ink: #1b2422;
+    --ink-soft: #4d5a58;
+    --line: #c7cdc4;
+    --teal: #1f6f6b;
+    --green: #3a7d5c;
+    --blue: #2b5c7a;
+    --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Newsreader', 'Iowan Old Style', 'Georgia', serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--bg), var(--bg)),
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(27,36,34,0.035) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(27,36,34,0.035) 28px);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: var(--blue); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover{ border-bottom-color: var(--blue); }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--teal); outline-offset: 3px; }
+
+  header.top{
+    max-width: 880px; margin: 0 auto; padding: 28px 24px 0;
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.04em; color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top a{ color: var(--ink-soft); text-decoration: none; }
+  header.top a:hover{ color: var(--blue); border-bottom-color: var(--blue); }
+
+  main{ max-width: 880px; margin: 0 auto; padding: 0 24px 120px; }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding: 64px 0 40px; border-bottom: 1px solid var(--line); }
+  .eyebrow{
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal); display:flex; align-items:center; gap:10px; margin-bottom: 22px;
+  }
+  .eyebrow::before{ content:""; width: 22px; height:1px; background: var(--teal); display:inline-block; }
+
+  h1{
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(2.1rem, 5vw, 3rem); line-height: 1.08; letter-spacing: -0.01em;
+    margin: 0 0 22px; max-width: 15ch; color: var(--ink);
+  }
+  h1 em{ font-style: italic; color: var(--green); }
+
+  .dek{ font-size: 1.15rem; line-height: 1.6; color: var(--ink-soft); max-width: 52ch; margin: 0 0 28px; }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap: 20px; font-family: var(--mono); font-size: 12.5px;
+    color: var(--ink-soft); padding-top: 20px; border-top: 1px dashed var(--line);
+  }
+  .meta-row span b{ color: var(--ink); font-weight: 500; }
+
+  /* ---------- Sections ---------- */
+  section{ padding: 56px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type{ border-bottom: none; }
+
+  .section-head{ display:flex; align-items: baseline; gap: 14px; margin-bottom: 20px; }
+  .section-num{ font-family: var(--mono); font-size: 12.5px; color: var(--teal); }
+  h2{
+    font-family: var(--serif); font-weight: 500; font-size: 1.7rem; margin: 0; color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  h3{
+    font-family: var(--serif); font-weight: 500; font-size: 1.2rem; margin: 32px 0 10px; color: var(--ink);
+  }
+
+  p{ max-width: 60ch; margin: 0 0 18px; color: var(--ink); }
+  p.dim{ color: var(--ink-soft); }
+  .prose p:last-child{ margin-bottom: 0; }
+
+  code{ font-family: var(--mono); font-size: 0.88em; background: var(--bg-dim); padding: 0.1em 0.4em; border-radius: 3px; color: var(--green); }
+
+  /* ---------- Figures ---------- */
+  figure{ margin: 28px 0; }
+  figure .plot{ border-radius: 4px; border: 1px solid var(--line); background: #fff; overflow: hidden; }
+  figcaption{
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-top: 10px;
+    line-height: 1.5; max-width: 62ch;
+  }
+
+  .callout{
+    max-width: 60ch; margin: 22px 0; padding: 16px 18px; border-radius: 4px;
+    background: var(--bg-dim); border-left: 2px solid var(--teal);
+  }
+  .callout .tag{ font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing:0.06em; text-transform:uppercase; margin-bottom: 6px; display:block; }
+  .callout p{ margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
+
+  /* ---------- Tables ---------- */
+  .table-wrap{ overflow-x: auto; }
+  table{ width:100%; border-collapse: collapse; margin: 22px 0; font-size: 0.95rem; }
+  th, td{ text-align:left; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  th{ font-family: var(--mono); font-size: 11.5px; letter-spacing:0.05em; text-transform:uppercase; color: var(--ink-soft); font-weight:500; }
+  td{ color: var(--ink-soft); }
+  td.num, th.num{ text-align: right; font-family: var(--mono); font-size: 0.88rem; white-space: nowrap; }
+  tr:last-child td{ border-bottom: none; }
+  tr.ref td{ color: var(--ink); }
+
+  .stat-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin: 26px 0; }
+  .stat{ padding: 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg-dim); }
+  .stat .n{ font-family: var(--serif); font-size: 1.9rem; color: var(--teal); line-height:1; }
+  .stat .l{ font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-top: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  footer{
+    max-width: 880px; margin: 0 auto; padding: 40px 24px 60px; border-top: 1px solid var(--line);
+    display:flex; justify-content: space-between; align-items:center; flex-wrap:wrap; gap: 16px;
+  }
+  footer .back{ font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+  footer .links{ display:flex; gap: 18px; font-family: var(--mono); font-size: 13px; }
+  footer a{ color: var(--ink-soft); text-decoration: none; }
+  footer a:hover{ color: var(--blue); border-bottom-color: var(--blue); text-decoration: none; }
+
+  @media (max-width: 640px){
+    header.top{ flex-direction: column; gap: 8px; }
+    .meta-row{ flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="index.html">&larr; Vaishnavi Muralikrishnan</a>
+  <span>AI Engineering · Inference Optimization · 2026</span>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="eyebrow">Inference Optimization · Ranking · Evaluation</div>
+    <h1>What Reranking <em>Costs</em> and What It Buys</h1>
+    <p class="dek">
+      A cross-encoder reranker is the standard way to improve a semantic search ranking, and it is also the most expensive component in the path. I built a benchmark to measure what it buys per unit of inference cost on Amazon ESCI. On this workload, the measured quality gain is not statistically supported, and the cost is a 6.6 to 20.6 times increase in median latency.
+    </p>
+    <div class="meta-row">
+      <span><b>Workload:</b> 200 test queries, 4,103 judged query-product pairs, CPU inference</span>
+      <span><b>Models:</b> MiniLM-L6 bi-encoder and MS MARCO MiniLM-L6 cross-encoder</span>
+      <span><b>Evaluation:</b> NDCG@10, exact-match recall, paired bootstrap</span>
+    </div>
+  </section>
+
+  <section id="problem">
+    <div class="section-head"><span class="section-num">01</span><h2>The Engineering Question</h2></div>
+    <div class="prose">
+      <p>
+        A search ranking pipeline usually has a cheap first stage and an expensive second stage. A bi-encoder embeds the query and compares it against precomputed product vectors, which costs one query encoding and a matrix product. A cross-encoder reads every query and product pair jointly through a transformer, so its cost grows with the number of pairs scored. Selective reranking limits that cost by applying the cross-encoder only to the top K semantic candidates.
+      </p>
+      <p>
+        The decision to deploy a reranker is a trade-off between ranking quality and inference cost, and it should be made with measurements rather than convention. This project quantifies both sides under one fixed workload and reports how certain each conclusion is. Selective reranking is an established technique and is not presented here as new. The contribution is the measurement discipline.
+      </p>
+      <p class="dim">
+        Scope: every method ranks a supplied candidate set, namely the products that ESCI annotators judged for each query. There is no catalogue-wide retrieval stage, so the results describe reranking over small judged pools and not end-to-end search quality.
+      </p>
+    </div>
+  </section>
+
+  <section id="pipeline">
+    <div class="section-head"><span class="section-num">02</span><h2>Ranking Strategies Compared</h2></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Strategy</th><th>Model</th><th>Inference cost</th></tr></thead>
+        <tbody>
+          <tr><td>BM25</td><td>Lexical, fitted per query on its candidate titles</td><td>No neural inference</td></tr>
+          <tr><td>Semantic only</td><td><code>all-MiniLM-L6-v2</code>, precomputed product index</td><td>One query encoding and a dot product</td></tr>
+          <tr><td>Selective rerank, K = 5, 10, 20, 30</td><td>Semantic top K reordered by <code>ms-marco-MiniLM-L-6-v2</code></td><td>K cross-encoder pairs per query</td></tr>
+          <tr><td>Cross-encoder, all candidates</td><td>Every candidate scored jointly with the query</td><td>One pair per candidate</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="dim">
+      Candidates outside the top K keep their semantic order after the reranked head. Semantic similarities and cross-encoder logits live on different scales and are never compared or fused, so the final order is defined by a single rule: reranked head first, semantic tail second.
+    </p>
+  </section>
+
+  <section id="evaluation">
+    <div class="section-head"><span class="section-num">03</span><h2>Evaluation Design</h2></div>
+    <div class="prose">
+      <p>
+        The benchmark uses the Amazon ESCI shopping-queries dataset, Task 1, US locale. Relevance labels are mapped to graded gains (Exact = 3, Substitute = 2, Complement = 1, Irrelevant = 0). The evaluation sample is 200 test queries drawn with a fixed seed of 42, which keeps each query's full candidate set: 4,103 query-product pairs, about 20.5 per query, ranging from 9 to 55.
+      </p>
+      <p>
+        Every method is evaluated on the same queries with one metric implementation. NDCG@10 uses the graded gain with a log2 discount. Ties are resolved by stable sorting, so equal scores keep dataset order. Exact-match recall is the share of queries with at least one Exact product in the top 5 or top 10. Uncertainty is estimated with a paired bootstrap that resamples queries, not rows, because the rows within a query are not independent.
+      </p>
+      <p class="dim">
+        Earlier exploratory runs used a different query sample. They were removed from the benchmark so that old and new numbers are never compared as evidence of improvement.
+      </p>
+    </div>
+  </section>
+
+  <section id="quality">
+    <div class="section-head"><span class="section-num">04</span><h2>Ranking Quality and Cost</h2></div>
+    <p>
+      Quality is nearly flat across every semantic and reranked configuration. The cost columns are not.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Method</th><th class="num">NDCG@10</th><th class="num">Exact in top 5</th>
+          <th class="num">CE pairs</th><th class="num">Pairs scored</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>BM25</td><td class="num">0.8178</td><td class="num">0.905</td><td class="num">0</td><td class="num">0%</td></tr>
+          <tr class="ref"><td>Semantic only</td><td class="num">0.8445</td><td class="num">0.940</td><td class="num">0</td><td class="num">0%</td></tr>
+          <tr><td>Selective rerank K=5</td><td class="num">0.8457</td><td class="num">0.940</td><td class="num">1,000</td><td class="num">24.4%</td></tr>
+          <tr><td>Selective rerank K=10</td><td class="num">0.8428</td><td class="num">0.920</td><td class="num">1,999</td><td class="num">48.7%</td></tr>
+          <tr><td>Selective rerank K=20</td><td class="num">0.8474</td><td class="num">0.915</td><td class="num">3,321</td><td class="num">80.9%</td></tr>
+          <tr><td>Selective rerank K=30</td><td class="num">0.8471</td><td class="num">0.915</td><td class="num">3,725</td><td class="num">90.8%</td></tr>
+          <tr><td>Cross-encoder, all candidates</td><td class="num">0.8465</td><td class="num">0.915</td><td class="num">4,103</td><td class="num">100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="n">+0.0029</div><div class="l">Largest NDCG@10 gain over semantic (K=20)</div></div>
+      <div class="stat"><div class="n">24.4%</div><div class="l">Pairs scored at K=5, the cheapest reranker</div></div>
+      <div class="stat"><div class="n">90.8%</div><div class="l">Pairs scored at K=30, near full cost</div></div>
+    </div>
+
+    <div class="callout">
+      <span class="tag">A property of the workload</span>
+      <p>
+        With about 20 candidates per query, K=20 already scores 81% of all pairs and K=30 scores 91%. On pools this small, increasing K approaches the cost of reranking everything without a corresponding quality gain. The cost curve is bounded by pool size, which is a limit of this benchmark and not a general property of selective reranking.
+      </p>
+    </div>
+
+    <p class="dim">
+      Exact-match recall in the top 10 was 0.99 for semantic-only ranking and for every selective configuration. Exact recall in the top 5 fell from 0.940 to 0.915 at K=20 and K=30. That change was observed on one sample and was not tested for significance.
+    </p>
+  </section>
+
+  <section id="uncertainty">
+    <div class="section-head"><span class="section-num">05</span><h2>Statistical Uncertainty</h2></div>
+    <p>
+      The NDCG differences between methods are small, so each one is reported with a paired bootstrap interval over queries.
+    </p>
+
+    <figure>
+      <div class="plot"><svg viewBox="0 0 640 264" role="img" aria-label="Paired bootstrap 95 percent confidence intervals for NDCG@10 differences. All five intervals cross zero." style="width:100%;height:auto;display:block;background:#fff" font-family="'JetBrains Mono','IBM Plex Mono',ui-monospace,Menlo,monospace" font-size="11"><line x1="160.0" y1="14" x2="160.0" y2="214" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="160.0" y="230" text-anchor="middle" fill="#4d5a58">-0.02</text><line x1="272.5" y1="14" x2="272.5" y2="214" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="272.5" y="230" text-anchor="middle" fill="#4d5a58">-0.01</text><line x1="385.0" y1="14" x2="385.0" y2="214" stroke="#1b2422" stroke-width="1"/><text x="385.0" y="230" text-anchor="middle" fill="#4d5a58">+0.00</text><line x1="497.5" y1="14" x2="497.5" y2="214" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="497.5" y="230" text-anchor="middle" fill="#4d5a58">+0.01</text><line x1="610.0" y1="14" x2="610.0" y2="214" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="610.0" y="230" text-anchor="middle" fill="#4d5a58">+0.02</text><text x="148" y="38.0" text-anchor="end" fill="#1b2422" font-size="12">K=5 minus semantic</text><line x1="333.8" y1="34.0" x2="462.4" y2="34.0" stroke="#2b5c7a" stroke-width="2"/><line x1="333.8" y1="29.0" x2="333.8" y2="39.0" stroke="#2b5c7a" stroke-width="2"/><line x1="462.4" y1="29.0" x2="462.4" y2="39.0" stroke="#2b5c7a" stroke-width="2"/><circle cx="398.6" cy="34.0" r="4.5" fill="#1f6f6b"/><text x="148" y="78.0" text-anchor="end" fill="#1b2422" font-size="12">K=20 minus semantic</text><line x1="278.4" y1="74.0" x2="560.7" y2="74.0" stroke="#2b5c7a" stroke-width="2"/><line x1="278.4" y1="69.0" x2="278.4" y2="79.0" stroke="#2b5c7a" stroke-width="2"/><line x1="560.7" y1="69.0" x2="560.7" y2="79.0" stroke="#2b5c7a" stroke-width="2"/><circle cx="418.5" cy="74.0" r="4.5" fill="#1f6f6b"/><text x="148" y="118.0" text-anchor="end" fill="#1b2422" font-size="12">K=30 minus semantic</text><line x1="277.6" y1="114.0" x2="559.9" y2="114.0" stroke="#2b5c7a" stroke-width="2"/><line x1="277.6" y1="109.0" x2="277.6" y2="119.0" stroke="#2b5c7a" stroke-width="2"/><line x1="559.9" y1="109.0" x2="559.9" y2="119.0" stroke="#2b5c7a" stroke-width="2"/><circle cx="415.1" cy="114.0" r="4.5" fill="#1f6f6b"/><text x="148" y="158.0" text-anchor="end" fill="#1b2422" font-size="12">K=20 minus K=5</text><line x1="281.6" y1="154.0" x2="531.7" y2="154.0" stroke="#2b5c7a" stroke-width="2"/><line x1="281.6" y1="149.0" x2="281.6" y2="159.0" stroke="#2b5c7a" stroke-width="2"/><line x1="531.7" y1="149.0" x2="531.7" y2="159.0" stroke="#2b5c7a" stroke-width="2"/><circle cx="404.9" cy="154.0" r="4.5" fill="#1f6f6b"/><text x="148" y="198.0" text-anchor="end" fill="#1b2422" font-size="12">K=30 minus K=20</text><line x1="354.0" y1="194.0" x2="405.7" y2="194.0" stroke="#2b5c7a" stroke-width="2"/><line x1="354.0" y1="189.0" x2="354.0" y2="199.0" stroke="#2b5c7a" stroke-width="2"/><line x1="405.7" y1="189.0" x2="405.7" y2="199.0" stroke="#2b5c7a" stroke-width="2"/><circle cx="381.6" cy="194.0" r="4.5" fill="#1f6f6b"/><text x="160" y="254" fill="#4d5a58">difference in mean NDCG@10, point estimate and 95% interval</text></svg></div>
+      <figcaption>Paired bootstrap, 95% intervals for NDCG@10 differences on the same 200 queries. Every interval crosses zero.</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Comparison</th><th class="num">Mean difference</th><th class="num">95% interval</th></tr></thead>
+        <tbody>
+          <tr><td>K=5 minus semantic</td><td class="num">+0.00121</td><td class="num">[-0.00455, 0.00688]</td></tr>
+          <tr><td>K=20 minus semantic</td><td class="num">+0.00298</td><td class="num">[-0.00948, 0.01562]</td></tr>
+          <tr><td>K=30 minus semantic</td><td class="num">+0.00268</td><td class="num">[-0.00955, 0.01555]</td></tr>
+          <tr><td>K=20 minus K=5</td><td class="num">+0.00177</td><td class="num">[-0.00919, 0.01304]</td></tr>
+          <tr><td>K=30 minus K=20</td><td class="num">-0.00030</td><td class="num">[-0.00276, 0.00184]</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="tag">What this establishes</span>
+      <p>
+        The observed differences are within sampling noise. The data neither supports a quality improvement from reranking nor rules out a small one: the intervals extend to roughly +0.015 NDCG@10, so an effect of that size could exist and this sample is too small to detect it. The supported statement is that semantic-only ranking is a strong default on this workload.
+      </p>
+    </div>
+  </section>
+
+  <section id="latency">
+    <div class="section-head"><span class="section-num">06</span><h2>Operational Latency</h2></div>
+    <p>
+      Offline scoring cost is only part of the picture. The service benchmark issues one query per call, so query encoding runs with a batch of one, and separates encoding, semantic scoring and reranking time.
+    </p>
+
+    <figure>
+      <div class="plot"><svg viewBox="0 0 640 246" role="img" aria-label="Median and 95th percentile latency in milliseconds for semantic-only ranking and two selective reranking depths" style="width:100%;height:auto;display:block;background:#fff" font-family="'JetBrains Mono','IBM Plex Mono',ui-monospace,Menlo,monospace" font-size="11"><line x1="190.0" y1="14" x2="190.0" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="190.0" y="216" text-anchor="middle" fill="#4d5a58">0</text><line x1="235.7" y1="14" x2="235.7" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="235.7" y="216" text-anchor="middle" fill="#4d5a58">100</text><line x1="281.4" y1="14" x2="281.4" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="281.4" y="216" text-anchor="middle" fill="#4d5a58">200</text><line x1="327.1" y1="14" x2="327.1" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="327.1" y="216" text-anchor="middle" fill="#4d5a58">300</text><line x1="372.9" y1="14" x2="372.9" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="372.9" y="216" text-anchor="middle" fill="#4d5a58">400</text><line x1="418.6" y1="14" x2="418.6" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="418.6" y="216" text-anchor="middle" fill="#4d5a58">500</text><line x1="464.3" y1="14" x2="464.3" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="464.3" y="216" text-anchor="middle" fill="#4d5a58">600</text><line x1="510.0" y1="14" x2="510.0" y2="200" stroke="#c7cdc4" stroke-width="1" stroke-dasharray="2 3"/><text x="510.0" y="216" text-anchor="middle" fill="#4d5a58">700</text><text x="178" y="42" text-anchor="end" fill="#1b2422" font-size="12">Semantic only</text><rect x="190" y="22" width="7.7" height="17" fill="#1f6f6b"/><text x="203.7" y="35" fill="#1b2422">16.76 median</text><rect x="190" y="43" width="11.9" height="17" fill="#2b5c7a"/><text x="207.9" y="56" fill="#1b2422">26.12 p95</text><text x="178" y="104" text-anchor="end" fill="#1b2422" font-size="12">Selective rerank, K=5</text><rect x="190" y="84" width="50.9" height="17" fill="#1f6f6b"/><text x="246.9" y="97" fill="#1b2422">111.27 median</text><rect x="190" y="105" width="266.0" height="17" fill="#2b5c7a"/><text x="462.0" y="118" fill="#1b2422">581.95 p95</text><text x="178" y="166" text-anchor="end" fill="#1b2422" font-size="12">Selective rerank, K=20</text><rect x="190" y="146" width="158.0" height="17" fill="#1f6f6b"/><text x="354.0" y="159" fill="#1b2422">345.70 median</text><rect x="190" y="167" width="299.5" height="17" fill="#2b5c7a"/><text x="495.5" y="180" fill="#1b2422">655.15 p95</text><text x="190" y="236" fill="#4d5a58">milliseconds per query (CPU, one query per call)</text></svg></div>
+      <figcaption>Per-query latency on CPU: one query per call, rerank batch size 32, one warm-up call, no concurrency. Index construction, model loading and network time are excluded.</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mode</th><th class="num">Median</th><th class="num">P95</th><th class="num">Median vs. semantic</th></tr></thead>
+        <tbody>
+          <tr><td>Semantic only</td><td class="num">16.76 ms</td><td class="num">26.12 ms</td><td class="num">1.0x</td></tr>
+          <tr><td>Selective rerank K=5</td><td class="num">111.27 ms</td><td class="num">581.95 ms</td><td class="num">6.6x</td></tr>
+          <tr><td>Selective rerank K=20</td><td class="num">345.70 ms</td><td class="num">655.15 ms</td><td class="num">20.6x</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="n">6.6x</div><div class="l">Median latency, K=5 vs. semantic</div></div>
+      <div class="stat"><div class="n">20.6x</div><div class="l">Median latency, K=20 vs. semantic</div></div>
+      <div class="stat"><div class="n">70.9 s</div><div class="l">One-time product index build</div></div>
+    </div>
+
+    <p class="dim">
+      Reranking widens the tail considerably: the K=5 p95 is about five times its own median. The cause of that tail was not isolated in this benchmark. These are measurements from one CPU environment and are not latency guarantees. The 70.9 second index build is an offline cost paid once and is kept separate from query-time cost.
+    </p>
+  </section>
+
+  <section id="decisions">
+    <div class="section-head"><span class="section-num">07</span><h2>Engineering Decisions</h2></div>
+
+    <h3>Separate offline index from online inference</h3>
+    <p>
+      Product titles are encoded once into a normalised float32 matrix with a title-to-row mapping. The index is cached with a checksum and reused only when the model, the title list and the matrix all match. The query path never encodes product titles: a candidate that is absent from the index raises an error instead of silently adding latency.
+    </p>
+
+    <h3>One ranking policy for evaluation and service</h3>
+    <p>
+      The selective reranking function is shared by the offline evaluation and by <code>search_candidates()</code>, which returns the ranked rows together with candidate count, reranked count, and separate timings for query encoding, semantic scoring and reranking. A test compares the service output against the evaluation orderings, so the benchmark describes the code that would serve queries.
+    </p>
+
+    <h3>A single metric implementation</h3>
+    <p>
+      NDCG@10 is computed by one function that is checked against a reference implementation on synthetic cases. Every method is converted to an explicit stable ordering before scoring, which removes tie-handling differences between methods as a source of apparent gains.
+    </p>
+  </section>
+
+  <section id="limits">
+    <div class="section-head"><span class="section-num">08</span><h2>Limitations and Next Steps</h2></div>
+    <div class="prose">
+      <p>
+        The service ranks a supplied candidate set and does not retrieve from a catalogue. The results rest on one sample of 200 queries with about 20 candidates each, one seed, and sequential CPU timings. BM25 is fitted per query on its candidate titles, so it is a weak baseline and not a tuned one. The cross-encoder is used as released and was not adapted to ESCI. This is not a production system: there is no concurrency handling, request batching or monitoring.
+      </p>
+      <p class="dim">
+        The next step that would change what the benchmark can conclude is an independent retrieval stage over the indexed catalogue, which produces candidate pools of realistic size and gives selective reranking a regime in which K matters. A second step is repeating the evaluation across several seeds to test whether the intervals are stable.
+      </p>
+    </div>
+  </section>
+
+  <section id="code">
+    <div class="section-head"><span class="section-num">09</span><h2>Implementation</h2></div>
+    <p>
+      The notebook, covering data preparation, index construction, baselines, evaluation and the search service with its test suite, is available with the full results README:
+    </p>
+    <p>
+      <a href="https://github.com/vaishnavimuralikrishnan/retail-search-inference-benchmark" target="_blank" rel="noopener">github.com/vaishnavimuralikrishnan/retail-search-inference-benchmark</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <span class="back"><a href="index.html">&larr; Back to work</a></span>
+  <span class="links">
+    <a href="https://www.linkedin.com/in/vaishnavimu" target="_blank" rel="noopener">linkedin</a>
+    <a href="https://github.com/vaishnavimuralikrishnan" target="_blank" rel="noopener">github</a>
+  </span>
+</footer>
+
+</body>
+</html>
